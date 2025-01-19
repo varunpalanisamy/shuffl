@@ -1,10 +1,12 @@
-# Shuffl
+# shuffl (Poker App)
 
 ## Prerequisites
 - The main aspect of this app is that it shuffles all the cards and gives the users two cards each
 - App that takes out the need for physical poker hands (cards)
 - There will be the same features just like in real life (call, fold, check)
 - This will also allow users to learn while they are playing
+
+---
   
 # Project Setup Instructions
 
@@ -71,56 +73,4 @@ npm start
 
 - This will start the React Native frontend.
 - If using Expo Go, scan the QR code shown in the terminal to run the app on your mobile device.
-
-### 6. Troubleshooting
-
-- If you encounter issues related to missing dependencies, ensure all required dependencies have been installed correctly.
-- Check that the backend is running and accessible via the correct IP address if running on a mobile device.
-
----
-
-## Python Dependencies (requirements.txt)
-
-Create a `requirements.txt` file and add the following dependencies:
-
-```
-fastapi
-uvicorn
-python-multipart
-```
-
-To install the dependencies, run:
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-## Useful Commands
-
-### Stop backend server
-Press `CTRL + C` in the terminal running the backend to stop it.
-
-### Clean npm cache
-```bash
-npm cache clean --force
-```
-
-### Reinstall frontend dependencies
-```bash
-rm -rf node_modules package-lock.json
-npm install
-```
-
----
-
-## Additional Notes
-
-- Ensure your firewall allows traffic on port 8000 if accessing the backend from another device.
-- If running on a local network, update the frontend to fetch data from the correct backend IP (e.g., `http://<your-ip>:8000/deal`).
-
----
-
-That's it! Your project should now be up and running successfully.
 
