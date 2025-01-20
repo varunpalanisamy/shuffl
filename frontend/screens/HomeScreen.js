@@ -41,6 +41,7 @@ export default function HomeScreen({ navigation }) {
   };
 
   const handleCreateGame = () => {
+    
     navigation.navigate('Game');
   };
 
@@ -63,8 +64,17 @@ export default function HomeScreen({ navigation }) {
         />
       </View>
       
-      <Animated.View style={[styles.buttonsContainer, { opacity: fadeAnim }]}>
-        <GradientButton title="Create Game Session" onPress={handleCreateGame} />
+      <Animated.View style={[
+        styles.buttonsContainer,
+        {
+          opacity: fadeAnim,
+          transform: [{ translateX: fadeAnim.interpolate({
+            inputRange: [0, 1],
+            outputRange: [-300, 0]
+          })}]
+        }
+      ]}>
+        <GradientButton title="Create Game Session" onPress={handleJoinGame} />
         <GradientButton title="Join Game Session" onPress={handleJoinGame} />
       </Animated.View>
 
