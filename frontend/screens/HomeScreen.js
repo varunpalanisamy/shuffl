@@ -41,6 +41,7 @@ export default function HomeScreen({ navigation }) {
   };
 
   const handleCreateGame = () => {
+    
     navigation.navigate('Game');
   };
 
@@ -63,7 +64,6 @@ export default function HomeScreen({ navigation }) {
         />
       </View>
       
-<<<<<<< HEAD:frontend/shuffl/App.js
       <Animated.View style={[
         styles.buttonsContainer,
         {
@@ -75,10 +75,6 @@ export default function HomeScreen({ navigation }) {
         }
       ]}>
         <GradientButton title="Create Game Session" onPress={handleJoinGame} />
-=======
-      <Animated.View style={[styles.buttonsContainer, { opacity: fadeAnim }]}>
-        <GradientButton title="Create Game Session" onPress={handleCreateGame} />
->>>>>>> upstream/main:frontend/screens/HomeScreen.js
         <GradientButton title="Join Game Session" onPress={handleJoinGame} />
       </Animated.View>
 
