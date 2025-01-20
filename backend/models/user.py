@@ -1,5 +1,8 @@
-from pydantic import BaseModel
+class Player:
+    def __init__(self, player_id, name):
+        self.player_id = player_id
+        self.name = name
+        self.hand = []
 
-class User(BaseModel):
-    id: str
-    username: str
+    def set_hand(self, hand):
+        self.hand = hand
