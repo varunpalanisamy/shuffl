@@ -74,7 +74,7 @@ export default function App() {
           })}]
         }
       ]}>
-        <GradientButton title="Create Game Session" onPress={generateRandomCode} />
+        <GradientButton title="Create Game Session" onPress={handleJoinGame} />
         <GradientButton title="Join Game Session" onPress={handleJoinGame} />
       </Animated.View>
 
