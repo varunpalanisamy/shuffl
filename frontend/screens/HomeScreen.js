@@ -1,21 +1,24 @@
 import React, { useState, useRef } from 'react';
-import { StyleSheet, Text, View, Image, Animated } from 'react-native';
+import { StyleSheet, Text, View, Image, Animated, Alert, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFonts } from 'expo-font';
 import GradientButton from '../components/GradientButton';
-import TextFieldComponent from '../components/TextFieldComponent';
 
 export default function HomeScreen({ navigation }) {
   const [fontsLoaded] = useFonts({
     'SFCompactRounded': require('../assets/fonts/SF-Compact-Rounded-Black.otf'),
   });
 
-  const [showTextField, setShowTextField] = useState(false);
-  const [code, setCode] = useState('');
+  const [showCreateGame, setShowCreateGame] = useState(false);
+  const [showJoinGame, setShowJoinGame] = useState(false);
+  const [username, setUsername] = useState('');
+  const [gameCode, setGameCode] = useState('');
   const slideAnim = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
-  const animateTransition = (show) => {
+  const animateTransition = (show, isJoin) => {
+    setShowCreateGame(!isJoin && show);
+    setShowJoinGame(isJoin && show);
     Animated.parallel([
       Animated.timing(slideAnim, {
         toValue: show ? 1 : 0,
@@ -30,19 +33,38 @@ export default function HomeScreen({ navigation }) {
     ]).start();
   };
 
+  const handleCreateGame = async () => {
+    if (!username.trim()) {
+      Alert.alert('Error', 'Please enter a username');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:8000/game/create-game', {
+        method: 'POST'
+      });
+      const data = await response.json();
+      navigation.navigate('Lobby', {
+        gameCode: data.game_code,
+        username,
+        isHost: true
+      });
+    } catch (error) {
+      console.error('Error creating game:', error);
+    }
+  };
+
   const handleJoinGame = () => {
-    animateTransition(true);
-    setShowTextField(true);
-  };
-
-  const handleBack = () => {
-    animateTransition(false);
-    setShowTextField(false);
-  };
-
-  const handleCreateGame = () => {
+    if (!username.trim() || !gameCode.trim()) {
+      Alert.alert('Error', 'Please enter both username and game code');
+      return;
+    }
     
-    navigation.navigate('Game');
+    navigation.navigate('Lobby', {
+      gameCode: gameCode,
+      username,
+      isHost: false
+    });
   };
 
   if (!fontsLoaded) {
@@ -53,7 +75,6 @@ export default function HomeScreen({ navigation }) {
     <View style={styles.container}>
       <LinearGradient
         colors={['#ABE098', '#A7DD99', '#81BD9F']}
-        locations={[0.26, 0.29, 1.0]}
         style={styles.background}
       />
       <View style={styles.titleCard}>
@@ -74,13 +95,44 @@ export default function HomeScreen({ navigation }) {
           })}]
         }
       ]}>
-        <GradientButton title="Create Game Session" onPress={handleJoinGame} />
-        <GradientButton title="Join Game Session" onPress={handleJoinGame} />
+        <GradientButton title="Create Game Session" onPress={() => animateTransition(true, false)} />
+        <GradientButton title="Join Game Session" onPress={() => animateTransition(true, true)} />
       </Animated.View>
 
-      <Animated.View style={[styles.textFieldContainer, { opacity: slideAnim }]}>
-        <TextFieldComponent value={code} onChangeText={setCode} />
-        <GradientButton title="Back" onPress={handleBack} />
+      <Animated.View style={[styles.formContainer, { opacity: slideAnim }]}>
+        {showCreateGame && (
+          <>
+            <TextInput
+              style={styles.input}
+              value={username}
+              onChangeText={setUsername}
+              placeholder="Enter Username"
+              placeholderTextColor="#fff"
+            />
+            <GradientButton title="Create" onPress={handleCreateGame} style={styles.smallerButton} />
+          </>
+        )}
+        
+        {showJoinGame && (
+          <>
+            <TextInput
+              style={styles.input}
+              value={username}
+              onChangeText={setUsername}
+              placeholder="Enter Username"
+              placeholderTextColor="#fff"
+            />
+            <TextInput
+              style={styles.input}
+              value={gameCode}
+              onChangeText={setGameCode}
+              placeholder="Enter Game Code"
+              placeholderTextColor="#fff"
+            />
+            <GradientButton title="Join" onPress={handleJoinGame} style={styles.smallerButton} />
+          </>
+        )}
+        <GradientButton title="Back" onPress={() => animateTransition(false)} style={styles.smallerButton} />
       </Animated.View>
     </View>
   );
@@ -89,8 +141,6 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   background: {
     position: 'absolute',
@@ -100,7 +150,7 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   titleCard: {
-    marginBottom: 160,
+    marginTop: 60,
     alignItems: 'center',
   },
   title: {
@@ -117,12 +167,32 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     position: 'absolute',
     bottom: 100,
+    left: 0,
+    right: 0,
     alignItems: 'center',
   },
-  textFieldContainer: {
+  formContainer: {
     position: 'absolute',
     bottom: 100,
+    left: 0,
+    right: 0,
     alignItems: 'center',
+  },
+  input: {
+    width: 250,
+    height: 40,
+    borderColor: '#fff',
+    borderWidth: 1,
+    borderRadius: 20,
+    marginVertical: 10,
+    paddingHorizontal: 15,
+    color: '#fff',
+    fontFamily: 'SFCompactRounded',
+    fontSize: 16,
+  },
+  smallerButton: {
+    width: 150,
+    padding: 10,
   },
 });
 
