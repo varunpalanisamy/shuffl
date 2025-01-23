@@ -53,7 +53,8 @@ const LobbyScreen = ({ route, navigation }) => {
 
       {isHost && (
         <TouchableOpacity style={styles.playButton}>
-          <Text style={styles.playButtonText}>Play</Text>
+          <Text style={styles.playButtonText}   onPress={() => navigation.navigate('Game')} // Replace 'TargetScreen' with the name of your screen
+>Play</Text>
         </TouchableOpacity>
       )}
     </LinearGradient>
